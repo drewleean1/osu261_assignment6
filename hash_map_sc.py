@@ -114,6 +114,7 @@ class HashMap:
         self._buckets = DynamicArray()
         for x in range(capacity_to_keep):
             self._buckets.append(LinkedList())
+        self._size = 0
 
     def resize_table(self, new_capacity: int) -> None:
         if new_capacity < 1:
@@ -156,6 +157,7 @@ class HashMap:
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
         self._buckets[hash_value].remove(key)
+        self._size -= 1 
 
     def get_keys_and_values(self) -> DynamicArray:
         array_return = DynamicArray()
