@@ -93,11 +93,11 @@ class HashMap:
         hash_value = hash_value % self.get_capacity()
         original_hash = hash_value
         #print(hash_value)
-        #if self._buckets[hash_value] != None and 'self._buckets[hash_value].is_tombstone == False and' self._buckets[hash_value].key == key:
-        if self._buckets[hash_value] != None and self._buckets[hash_value].key == key:
+        if self._buckets[hash_value] != None and 'self._buckets[hash_value].is_tombstone == False and' self._buckets[hash_value].key == key:
+        #if self._buckets[hash_value] != None and self._buckets[hash_value].key == key:
             #print(hash_value, key, '1')
             self._buckets[hash_value] = to_be_put
-        elif self._buckets[hash_value] == None: #or self._buckets[hash_value].is_tombstone == True:
+        elif self._buckets[hash_value] == None or self._buckets[hash_value].is_tombstone == True:
             #print(hash_value, key, '2')
             self._buckets[hash_value] = to_be_put
             self._size += 1
