@@ -91,6 +91,7 @@ class HashMap:
         to_be_put = HashEntry(key, value)
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
+        original_hash = hash_value
         #print(hash_value)
         #if self._buckets[hash_value] != None and 'self._buckets[hash_value].is_tombstone == False and' self._buckets[hash_value].key == key:
         if self._buckets[hash_value] != None and self._buckets[hash_value].key == key:
@@ -103,6 +104,7 @@ class HashMap:
         else:
             j = 1
             while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+                hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
                 if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
@@ -186,14 +188,15 @@ class HashMap:
 # ------------------- BASIC TESTING ---------------------------------------- #
 
 if __name__ == "__main__":
-    '''
+
     print("\nPDF - put example 1")
     print("-------------------")
     m = HashMap(53, hash_function_1)
     for i in range(150):
         m.put('str' + str(i), i * 100)
-        if i % 25 == 24:
-            print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
+        #if i % 25 == 24 or i == 14:
+        if i == 14 or i == 15:
+            print(i, m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
     '''
     print("\nPDF - put example 2")
     print("-------------------")
@@ -203,7 +206,7 @@ if __name__ == "__main__":
         if i % 10 == 9:
             print('--------', i)
             print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-'''
+
     print("\nPDF - table_load example 1")
     print("--------------------------")
     m = HashMap(101, hash_function_1)
