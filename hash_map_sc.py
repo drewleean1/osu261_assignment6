@@ -156,8 +156,9 @@ class HashMap:
     def remove(self, key: str) -> None:
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
-        self._buckets[hash_value].remove(key)
-        self._size -= 1 
+        outcome = self._buckets[hash_value].remove(key)
+        if outcome:
+            self._size -= 1
 
     def get_keys_and_values(self) -> DynamicArray:
         array_return = DynamicArray()
