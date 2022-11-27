@@ -135,12 +135,10 @@ class HashMap:
                 self._buckets.append(None)
             self._capacity = new_capacity
             self._size = 0
-            counter = 0
             for x in range(old_array.length()):
-                key_and_value = old_array.pop()
-                if key_and_value != None and key_and_value.is_tombstone == False:
-                    self.put(key_and_value.key, key_and_value.value)
-                    counter += 1
+                hash_entry = old_array[x]
+                if hash_entry != None and hash_entry.is_tombstone == False:
+                    self.put(hash_entry.key, hash_entry.value)
 
     def get(self, key: str) -> object:
         """
