@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Andrew Lee
+# OSU Email: leea6@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: Assignment 6
+# Due Date: 12/2/2022
+# Description: An implementation of a hash using open addressing
 
 from a6_include import (DynamicArray, DynamicArrayException, HashEntry,
                         hash_function_1, hash_function_2)
@@ -86,28 +86,59 @@ class HashMap:
     # ------------------------------------------------------------------ #
 
     def put(self, key: str, value: object) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        if self.table_load() >= 0.5:
+            self.resize_table(self.get_capacity()*2)
+        to_be_put = HashEntry(key, value)
+        hash_value = self._hash_function(key)
+        hash_value = hash_value % self.get_capacity()
+        #print(hash_value)
+        #if self._buckets[hash_value] != None and 'self._buckets[hash_value].is_tombstone == False and' self._buckets[hash_value].key == key:
+        if self._buckets[hash_value] != None and self._buckets[hash_value].key == key:
+            #print(hash_value, key, '1')
+            self._buckets[hash_value] = to_be_put
+        elif self._buckets[hash_value] == None: #or self._buckets[hash_value].is_tombstone == True:
+            #print(hash_value, key, '2')
+            self._buckets[hash_value] = to_be_put
+            self._size += 1
+        else:
+            j = 1
+            while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+                hash_value = (hash_value + j ** 2) % self.get_capacity()
+                j += 1
+                if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
+                    self._size -= 1
+            self._buckets[hash_value] = to_be_put
+            self._size += 1
 
     def table_load(self) -> float:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        return self.get_size()/self.get_capacity()
+
 
     def empty_buckets(self) -> int:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        counter = 0
+        for x in range(self._buckets.length()):
+            if self._buckets[x] == None or self._buckets[x].is_tombstone == True:
+                counter += 1
+        return counter
 
     def resize_table(self, new_capacity: int) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        if new_capacity < self.get_size():
+            return
+        else:
+            if not self._is_prime(new_capacity):
+                new_capacity = self._next_prime(new_capacity)
+            old_array = self._buckets
+            self._buckets = DynamicArray()
+            for x in range(new_capacity):
+                self._buckets.append(None)
+            self._capacity = new_capacity
+            self._size = 0
+            counter = 0
+            for x in range(old_array.length()):
+                key_and_value = old_array.pop()
+                if key_and_value != None and key_and_value.is_tombstone == False:
+                    self.put(key_and_value.key, key_and_value.value)
+                    counter += 1
 
     def get(self, key: str) -> object:
         """
@@ -155,7 +186,7 @@ class HashMap:
 # ------------------- BASIC TESTING ---------------------------------------- #
 
 if __name__ == "__main__":
-
+    '''
     print("\nPDF - put example 1")
     print("-------------------")
     m = HashMap(53, hash_function_1)
@@ -163,15 +194,16 @@ if __name__ == "__main__":
         m.put('str' + str(i), i * 100)
         if i % 25 == 24:
             print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-
+    '''
     print("\nPDF - put example 2")
     print("-------------------")
     m = HashMap(41, hash_function_2)
     for i in range(50):
         m.put('str' + str(i // 3), i * 100)
         if i % 10 == 9:
+            print('--------', i)
             print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-
+'''
     print("\nPDF - table_load example 1")
     print("--------------------------")
     m = HashMap(101, hash_function_1)
@@ -360,3 +392,4 @@ if __name__ == "__main__":
     print(m)
     for item in m:
         print('K:', item.key, 'V:', item.value)
+'''

@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Andrew Lee
+# OSU Email: leea6@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: Assignment 6
+# Due Date: 12/2/2022
+# Description: An implementation of a hash using chaining to deal with collisions
 
 
 from a6_include import (DynamicArray, LinkedList,
@@ -89,59 +89,80 @@ class HashMap:
     # ------------------------------------------------------------------ #
 
     def put(self, key: str, value: object) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        if self.table_load() >= 1:
+            self.resize_table(self.get_capacity()*2)
+        hash_value = self._hash_function(key)
+        hash_value = hash_value % self.get_capacity()
+        if self._buckets[hash_value].contains(key):
+            self._buckets[hash_value].remove(key)
+            self._size -= 1
+        self._buckets[hash_value].insert(key,value)
+        self._size += 1
 
     def empty_buckets(self) -> int:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        counter = 0
+        for x in range(self._buckets.length()):
+            if self._buckets[x].length() == 0:
+                counter += 1
+        return counter
 
     def table_load(self) -> float:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        return self.get_size()/self.get_capacity()
 
     def clear(self) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        capacity_to_keep = self._capacity
+        self._buckets = DynamicArray()
+        for x in range(capacity_to_keep):
+            self._buckets.append(LinkedList())
 
     def resize_table(self, new_capacity: int) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        if new_capacity < 1:
+            return
+        elif new_capacity >= 1:
+            if not self._is_prime(new_capacity):
+                new_capacity = self._next_prime(new_capacity)
+            old_array = self._buckets
+            self._buckets = DynamicArray()
+            for x in range(new_capacity):
+                self._buckets.append(LinkedList())
+            self._capacity = new_capacity
+            self._size = 0
+            counter = 0
+            for x in range(old_array.length()):
+                key_and_value = old_array.pop()
+                for x in key_and_value:
+                    self.put(x.key, x.value)
+                    counter += 1
 
     def get(self, key: str):
-        """
-        TODO: Write this implementation
-        """
-        pass
+        hash_value = self._hash_function(key)
+        hash_value = hash_value % self.get_capacity()
+        to_return = self._buckets[hash_value].contains(key)
+        if to_return != None:
+            return to_return.value
+        else:
+            return None
 
     def contains_key(self, key: str) -> bool:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        hash_value = self._hash_function(key)
+        hash_value = hash_value % self.get_capacity()
+        if self._buckets[hash_value].contains(key) != None:
+            return True
+        else:
+            return False
+
 
     def remove(self, key: str) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        hash_value = self._hash_function(key)
+        hash_value = hash_value % self.get_capacity()
+        self._buckets[hash_value].remove(key)
 
     def get_keys_and_values(self) -> DynamicArray:
-        """
-        TODO: Write this implementation
-        """
-        pass
-
+        array_return = DynamicArray()
+        for x in range(self._buckets.length()):
+            for y in self._buckets[x]:
+                array_return.append((y.key, y.value))
+        return array_return
 
 def find_mode(da: DynamicArray) -> (DynamicArray, int):
     """
@@ -150,12 +171,14 @@ def find_mode(da: DynamicArray) -> (DynamicArray, int):
     # if you'd like to use a hash map,
     # use this instance of your Separate Chaining HashMap
     map = HashMap()
+    for x in range(da.length()):
+        map.put(da[x])
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
 
 if __name__ == "__main__":
-
+    '''
     print("\nPDF - put example 1")
     print("-------------------")
     m = HashMap(53, hash_function_1)
@@ -172,6 +195,7 @@ if __name__ == "__main__":
         if i % 10 == 9:
             print(m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
 
+    
     print("\nPDF - empty_buckets example 1")
     print("-----------------------------")
     m = HashMap(101, hash_function_1)
@@ -265,7 +289,7 @@ if __name__ == "__main__":
             # NOT inserted keys must be absent
             result &= not m.contains_key(str(key + 1))
         print(capacity, result, m.get_size(), m.get_capacity(), round(m.table_load(), 2))
-
+    
     print("\nPDF - get example 1")
     print("-------------------")
     m = HashMap(31, hash_function_1)
@@ -282,7 +306,7 @@ if __name__ == "__main__":
     for i in range(200, 300, 21):
         print(i, m.get(str(i)), m.get(str(i)) == i * 10)
         print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
-
+    
     print("\nPDF - contains_key example 1")
     print("----------------------------")
     m = HashMap(53, hash_function_1)
@@ -311,7 +335,7 @@ if __name__ == "__main__":
         # NOT inserted keys must be absent
         result &= not m.contains_key(str(key + 1))
     print(result)
-
+    
     print("\nPDF - remove example 1")
     print("----------------------")
     m = HashMap(53, hash_function_1)
@@ -321,7 +345,7 @@ if __name__ == "__main__":
     m.remove('key1')
     print(m.get('key1'))
     m.remove('key4')
-
+    '''
     print("\nPDF - get_keys_and_values example 1")
     print("------------------------")
     m = HashMap(11, hash_function_2)
@@ -333,7 +357,7 @@ if __name__ == "__main__":
     m.remove('1')
     m.resize_table(2)
     print(m.get_keys_and_values())
-
+    '''
     print("\nPDF - find_mode example 1")
     print("-----------------------------")
     da = DynamicArray(["apple", "apple", "grape", "melon", "peach"])
@@ -352,3 +376,4 @@ if __name__ == "__main__":
         da = DynamicArray(case)
         mode, frequency = find_mode(da)
         print(f"Input: {da}\nMode : {mode}, Frequency: {frequency}\n")
+    '''
