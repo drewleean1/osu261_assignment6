@@ -86,6 +86,7 @@ class HashMap:
     # ------------------------------------------------------------------ #
 
     def put(self, key: str, value: object) -> None:
+        #need to add tombstone functionality?
         if self.table_load() >= 0.5:
             self.resize_table(self.get_capacity()*2)
         to_be_put = HashEntry(key, value)
@@ -93,7 +94,7 @@ class HashMap:
         hash_value = hash_value % self.get_capacity()
         original_hash = hash_value
         #print(hash_value)
-        if self._buckets[hash_value] != None and 'self._buckets[hash_value].is_tombstone == False and' self._buckets[hash_value].key == key:
+        if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
         #if self._buckets[hash_value] != None and self._buckets[hash_value].key == key:
             #print(hash_value, key, '1')
             self._buckets[hash_value] = to_be_put
@@ -192,8 +193,8 @@ if __name__ == "__main__":
     m = HashMap(53, hash_function_1)
     for i in range(150):
         m.put('str' + str(i), i * 100)
-        #if i % 25 == 24 or i == 14:
-        if i == 14 or i == 15:
+        if i % 25 == 24:
+        #if i == 14 or i == 15:
             print(i, m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
     '''
     print("\nPDF - put example 2")
