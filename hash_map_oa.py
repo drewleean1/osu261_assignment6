@@ -172,6 +172,8 @@ class HashMap:
                 j += 1
             if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
                 return True
+            else:
+                return False
 
     def remove(self, key: str) -> None:
         hash_value = self._hash_function(key)
