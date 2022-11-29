@@ -170,7 +170,8 @@ class HashMap:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
-            return True
+            if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
+                return True
 
     def remove(self, key: str) -> None:
         hash_value = self._hash_function(key)
