@@ -226,7 +226,7 @@ class HashMap:
                     self._index = self._index + 1
             value = self._buckets[self._index]
             self._index += 1
-]        except DynamicArrayException:
+        except DynamicArrayException:
             raise StopIteration
         return value
 
