@@ -86,20 +86,15 @@ class HashMap:
     # ------------------------------------------------------------------ #
 
     def put(self, key: str, value: object) -> None:
-        #need to add tombstone functionality?
         if self.table_load() >= 0.5:
             self.resize_table(self.get_capacity()*2)
         to_be_put = HashEntry(key, value)
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
         original_hash = hash_value
-        #print(hash_value)
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
-        #if self._buckets[hash_value] != None and self._buckets[hash_value].key == key:
-            #print(hash_value, key, '1')
             self._buckets[hash_value] = to_be_put
         elif self._buckets[hash_value] == None or self._buckets[hash_value].is_tombstone == True:
-            #print(hash_value, key, '2')
             self._buckets[hash_value] = to_be_put
             self._size += 1
         else:
@@ -142,52 +137,104 @@ class HashMap:
                     self.put(hash_entry.key, hash_entry.value)
 
     def get(self, key: str) -> object:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        '''method to return the value associated with the given key. Uses the same logic as our put method to find the
+        hash value with the key. '''
+        hash_value = self._hash_function(key)
+        hash_value = hash_value % self.get_capacity()
+        original_hash = hash_value
+        if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
+            return self._buckets[hash_value].value
+        elif self._buckets[hash_value] == None or self._buckets[hash_value].is_tombstone == True:
+            return None
+        else:
+            j = 1
+            while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+                hash_value = original_hash
+                hash_value = (hash_value + j ** 2) % self.get_capacity()
+                j += 1
+            return self._buckets[hash_value].value
 
     def contains_key(self, key: str) -> bool:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        if self.get_size() == 0:
+            return False
+        hash_value = self._hash_function(key)
+        hash_value = hash_value % self.get_capacity()
+        original_hash = hash_value
+        if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
+            return True
+        elif self._buckets[hash_value] == None or self._buckets[hash_value].is_tombstone == True:
+            return False
+        else:
+            j = 1
+            while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+                hash_value = original_hash
+                hash_value = (hash_value + j ** 2) % self.get_capacity()
+                j += 1
+            return True
 
     def remove(self, key: str) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        hash_value = self._hash_function(key)
+        hash_value = hash_value % self.get_capacity()
+        original_hash = hash_value
+        if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
+            self._buckets[hash_value].is_tombstone = True
+            self._size -= 1
+        elif self._buckets[hash_value] == None or self._buckets[hash_value].is_tombstone == True:
+            return
+        else:
+            j = 1
+            while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+                hash_value = original_hash
+                hash_value = (hash_value + j ** 2) % self.get_capacity()
+                j += 1
+                #if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
+                #    self._size -= 1
+            self._buckets[hash_value].is_tombstone = True
+            self._size -= 1
 
     def clear(self) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        self._buckets = DynamicArray()
+        for x in range(self._capacity):
+            self._buckets.append(None)
+        self._size = 0
 
     def get_keys_and_values(self) -> DynamicArray:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        array_returned = DynamicArray()
+        for x in range(self._buckets.length()):
+            if self._buckets[x] != None and self._buckets[x].is_tombstone == False:
+                array_returned.append((self._buckets[x].key, self._buckets[x].value))
+        return array_returned
 
     def __iter__(self):
-        """
-        TODO: Write this implementation
-        """
-        pass
+        '''__iter__ method that sets an index = 0'''
+        self._index = 0
+        return self
 
     def __next__(self):
-        """
-        TODO: Write this implementation
-        """
-        pass
+        '''__next__ method that will raise StopIteration once we get a DynamicArrayException'''
+        '''try:
+            value = self._da[self._index]
+        except DynamicArrayException:
+            raise StopIteration'''
+
+        try:
+            condition = True
+            while condition:
+                if self._buckets[self._index] != None and self._buckets[self._index].is_tombstone == False:
+                    condition = False
+                else:
+                    self._index = self._index + 1
+            value = self._buckets[self._index]
+            self._index += 1
+]        except DynamicArrayException:
+            raise StopIteration
+        return value
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
 
 if __name__ == "__main__":
-
+    '''
     print("\nPDF - put example 1")
     print("-------------------")
     m = HashMap(53, hash_function_1)
@@ -196,7 +243,7 @@ if __name__ == "__main__":
         if i % 25 == 24:
         #if i == 14 or i == 15:
             print(i, m.empty_buckets(), round(m.table_load(), 2), m.get_size(), m.get_capacity())
-    '''
+    
     print("\nPDF - put example 2")
     print("-------------------")
     m = HashMap(41, hash_function_2)
@@ -279,7 +326,7 @@ if __name__ == "__main__":
             # NOT inserted keys must be absent
             result &= not m.contains_key(str(key + 1))
         print(capacity, result, m.get_size(), m.get_capacity(), round(m.table_load(), 2))
-
+    
     print("\nPDF - get example 1")
     print("-------------------")
     m = HashMap(31, hash_function_1)
@@ -296,7 +343,7 @@ if __name__ == "__main__":
     for i in range(200, 300, 21):
         print(i, m.get(str(i)), m.get(str(i)) == i * 10)
         print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
-
+    
     print("\nPDF - contains_key example 1")
     print("----------------------------")
     m = HashMap(11, hash_function_1)
@@ -311,7 +358,7 @@ if __name__ == "__main__":
     m.remove('key3')
     print(m.contains_key('key3'))
 
-    print("\nPDF - contains_key example 2")
+    print("\nPDF - contains_key example 2") #GIVING PROBLEMS
     print("----------------------------")
     m = HashMap(79, hash_function_2)
     keys = [i for i in range(1, 1000, 20)]
@@ -335,7 +382,7 @@ if __name__ == "__main__":
     m.remove('key1')
     print(m.get('key1'))
     m.remove('key4')
-
+    
     print("\nPDF - clear example 1")
     print("---------------------")
     m = HashMap(101, hash_function_1)
@@ -346,7 +393,7 @@ if __name__ == "__main__":
     print(m.get_size(), m.get_capacity())
     m.clear()
     print(m.get_size(), m.get_capacity())
-
+    
     print("\nPDF - clear example 2")
     print("---------------------")
     m = HashMap(53, hash_function_1)
@@ -374,7 +421,7 @@ if __name__ == "__main__":
     m.remove('1')
     m.resize_table(12)
     print(m.get_keys_and_values())
-
+    '''
     print("\nPDF - __iter__(), __next__() example 1")
     print("---------------------")
     m = HashMap(10, hash_function_1)
@@ -394,4 +441,3 @@ if __name__ == "__main__":
     print(m)
     for item in m:
         print('K:', item.key, 'V:', item.value)
-'''
