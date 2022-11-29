@@ -195,8 +195,11 @@ class HashMap:
                 j += 1
                 #if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
                 #    self._size -= 1
-            self._buckets[hash_value].is_tombstone = True
-            self._size -= 1
+            if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
+                self._buckets[hash_value].is_tombstone = True
+                self._size -= 1
+            else:
+                return 
 
     def clear(self) -> None:
         self._buckets = DynamicArray()
