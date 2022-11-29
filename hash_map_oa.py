@@ -152,7 +152,10 @@ class HashMap:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
-            return self._buckets[hash_value].value
+            if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
+                return self._buckets[hash_value].value
+            else:
+                return None
 
     def contains_key(self, key: str) -> bool:
         if self.get_size() == 0:
