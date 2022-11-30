@@ -187,7 +187,9 @@ class HashMap:
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
             self._buckets[hash_value].is_tombstone = True
             self._size -= 1
+            print('aqui')
         elif self._buckets[hash_value] == None or self._buckets[hash_value].is_tombstone == True:
+            print('hello')
             return
         else:
             j = 1
