@@ -183,6 +183,7 @@ class HashMap:
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
         original_hash = hash_value
+        print(hash_value)
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
             self._buckets[hash_value].is_tombstone = True
             self._size -= 1
