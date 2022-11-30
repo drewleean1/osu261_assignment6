@@ -94,12 +94,13 @@ class HashMap:
         original_hash = hash_value
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
             self._buckets[hash_value] = to_be_put
-        elif self._buckets[hash_value] == None or self._buckets[hash_value].is_tombstone == True:
+        elif self._buckets[hash_value] == None: #or self._buckets[hash_value].is_tombstone == True:
             self._buckets[hash_value] = to_be_put
             self._size += 1
         else:
             j = 1
-            while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            #while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key: #and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1

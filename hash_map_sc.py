@@ -175,7 +175,8 @@ def find_mode(da: DynamicArray) -> (DynamicArray, int):
     # use this instance of your Separate Chaining HashMap
     map = HashMap()
     for x in range(da.length()):
-        map.put(da[x])
+        map.put(x, da[x])
+
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
