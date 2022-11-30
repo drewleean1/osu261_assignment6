@@ -148,7 +148,7 @@ class HashMap:
             return None
         else:
             j = 1
-            while self._buckets[hash_value] != None nd self._buckets[hash_value].key != key: #and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key: #and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
@@ -169,7 +169,7 @@ class HashMap:
             return False
         else:
             j = 1
-            while self._buckets[hash_value] != None and and self._buckets[hash_value].key != key: # self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key: # self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
