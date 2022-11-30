@@ -179,9 +179,12 @@ class HashMap:
                 return False
 
     def remove(self, key: str) -> None:
+        print(key)
         hash_value = self._hash_function(key)
+        print(hash_value)
         hash_value = hash_value % self.get_capacity()
         original_hash = hash_value
+        print(hash_value)
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
             self._buckets[hash_value].is_tombstone = True
             self._size -= 1
@@ -189,9 +192,9 @@ class HashMap:
             return
         else:
             j = 1
-            while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone != False and self._buckets[hash_value].key != key:
                 hash_value = original_hash
-                hash_value = (hash_value + j ** 2) % self.get_capacity()
+                hash_value = ((hash_value + j ** 2) % self.get_capacity())
                 j += 1
                 #if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
                 #    self._size -= 1
@@ -199,7 +202,7 @@ class HashMap:
                 self._buckets[hash_value].is_tombstone = True
                 self._size -= 1
             else:
-                return 
+                return
 
     def clear(self) -> None:
         self._buckets = DynamicArray()
@@ -430,7 +433,7 @@ if __name__ == "__main__":
     m.remove('1')
     m.resize_table(12)
     print(m.get_keys_and_values())
-    '''
+    
     print("\nPDF - __iter__(), __next__() example 1")
     print("---------------------")
     m = HashMap(10, hash_function_1)
@@ -450,3 +453,240 @@ if __name__ == "__main__":
     print(m)
     for item in m:
         print('K:', item.key, 'V:', item.value)
+    '''
+    print ('final test')
+    print ('------------')
+    m = HashMap(0,hash_function_1)
+
+    listed = [
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    ("key210", "-50", False),
+    ("key121", "706", False),
+    None,
+    None,
+    ("key142", "-120",True),
+    ("key701", "420", False),
+    ("key234", "522", False),
+    ("key217", "-216", False),
+    ("key335", "-111", False),
+    ("key407", "208", False),
+    ("key346", "562", False),
+    ("key419", "-111", False),
+    ("key591", "735", False),
+    ("key570", "-83", False),
+    ("key682", "932", True),
+    ("key881", "-393", False),
+    ("key595", "709", False),
+    ("key538", "-663", False),
+    ("key264", "-171", False),
+    ("key589", "936", True),
+    ("key860", "-263", False),
+    ("key762", "-633", True),
+    ("key171", "633", False),
+    ("key818", "677", False),
+    ("key297", "350", False),
+    ("key714", "-645", False),
+    ("key571", "486", False),
+    ("key597", "-565", False),
+    ("key366", "314", False),
+    ("key727", "383", False),
+    ("key980", "911", False),
+    ("key549", "-849", False),
+    ("key289", "956", False),
+    ("key137", "-564", False),
+    ("key705", "-314", False),
+    ("key535", "-240", False),
+    ("key824", "604", False),
+    ("key456", "-103", False),
+    None,
+    ("key557", "-683", False),
+    ("key585", "681", False),
+    ("key602", "709", False),
+    ("key126", "511", False),
+    ("key433", "-621", False),
+    ("key803", "-874", False),
+    None,
+    ("key996", "-453", False),
+    ("key671", "683", False),
+    ("key933", "-884", False),
+    None,
+    ("key188", "70", False),
+    ("key675", "742", False),
+    ("key856", "-670", False),
+    ("key205", "-448", False),
+    ("key620", "-89", False),
+    ("key135", "-203", False),
+    None,
+    ("key699", "948", False),
+    None,
+    ("key832", "503", False),
+    None,
+    None,
+    None,
+    ("key359", "126", False),
+    None,
+    None,
+    ("key479", "-629", False),
+    None,
+    None,
+    None,
+    ("key108", "784", False),
+    None,
+    ("key416", "223", False),
+    None,
+    ("key238", "-538", False),
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    ("key51", "808", False),
+    None,
+    ("key71", "-47", False),
+    None,
+    ("key91", "320", False),
+    None,
+    ("key48", "325", True),
+    None,
+    None,
+    ("key96", "494", False),
+    None,
+    None,
+    None,
+    None,
+    None]
+    for item in listed:
+        if item != None:
+            to_be_inserted = HashEntry(item[0], item[1])
+            to_be_inserted.is_tombstone = item[2]
+            m._buckets.append(to_be_inserted)
+        else:
+            m._buckets.append(None)
+    m._capacity = 223
+    print(m)
+    m.remove('key811')
+    #print(m)
