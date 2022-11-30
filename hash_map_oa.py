@@ -144,11 +144,11 @@ class HashMap:
         original_hash = hash_value
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
             return self._buckets[hash_value].value
-        elif self._buckets[hash_value] == None or self._buckets[hash_value].is_tombstone == True:
+        elif self._buckets[hash_value] == None: # or self._buckets[hash_value].is_tombstone == True:
             return None
         else:
             j = 1
-            while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            while self._buckets[hash_value] != None nd self._buckets[hash_value].key != key: #and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
@@ -165,11 +165,11 @@ class HashMap:
         original_hash = hash_value
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
             return True
-        elif self._buckets[hash_value] == None or self._buckets[hash_value].is_tombstone == True:
+        elif self._buckets[hash_value] == None: #or self._buckets[hash_value].is_tombstone == True:
             return False
         else:
             j = 1
-            while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            while self._buckets[hash_value] != None and and self._buckets[hash_value].key != key: # self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
@@ -179,27 +179,20 @@ class HashMap:
                 return False
 
     def remove(self, key: str) -> None:
-        print(self._hash_function)
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
         original_hash = hash_value
-        print(key, hash_value)
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
             self._buckets[hash_value].is_tombstone = True
             self._size -= 1
-            print('aqui')
-        elif self._buckets[hash_value] == None: # or self._buckets[hash_value].is_tombstone == True:
-            print('hello')
+        elif self._buckets[hash_value] == None:
             return
         else:
             j = 1
             while self._buckets[hash_value] != None and self._buckets[hash_value].key != key:#self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
-                print(j)
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
-                #if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
-                #    self._size -= 1
             if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
                 self._buckets[hash_value].is_tombstone = True
                 self._size -= 1
@@ -225,12 +218,6 @@ class HashMap:
         return self
 
     def __next__(self):
-        '''__next__ method that will raise StopIteration once we get a DynamicArrayException'''
-        '''try:
-            value = self._da[self._index]
-        except DynamicArrayException:
-            raise StopIteration'''
-
         try:
             condition = True
             while condition:
@@ -456,239 +443,3 @@ if __name__ == "__main__":
     for item in m:
         print('K:', item.key, 'V:', item.value)
     '''
-    print ('final test')
-    print ('------------')
-    m = HashMap(0,hash_function_1)
-
-    listed = [
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    ("key210", "-50", False),
-    ("key121", "706", False),
-    None,
-    None,
-    ("key142", "-120",True),
-    ("key701", "420", False),
-    ("key234", "522", False),
-    ("key217", "-216", False),
-    ("key335", "-111", False),
-    ("key407", "208", False),
-    ("key346", "562", False),
-    ("key419", "-111", False),
-    ("key591", "735", False),
-    ("key570", "-83", False),
-    ("key682", "932", True),
-    ("key881", "-393", False),
-    ("key595", "709", False),
-    ("key538", "-663", False),
-    ("key264", "-171", False),
-    ("key589", "936", True),
-    ("key860", "-263", False),
-    ("key762", "-633", True),
-    ("key171", "633", False),
-    ("key818", "677", False),
-    ("key297", "350", False),
-    ("key714", "-645", False),
-    ("key571", "486", False),
-    ("key597", "-565", False),
-    ("key366", "314", False),
-    ("key727", "383", False),
-    ("key980", "911", False),
-    ("key549", "-849", False),
-    ("key289", "956", False),
-    ("key137", "-564", False),
-    ("key705", "-314", False),
-    ("key535", "-240", False),
-    ("key824", "604", False),
-    ("key456", "-103", False),
-    None,
-    ("key557", "-683", False),
-    ("key585", "681", False),
-    ("key602", "709", False),
-    ("key126", "511", False),
-    ("key433", "-621", False),
-    ("key803", "-874", False),
-    None,
-    ("key996", "-453", False),
-    ("key671", "683", False),
-    ("key933", "-884", False),
-    None,
-    ("key188", "70", False),
-    ("key675", "742", False),
-    ("key856", "-670", False),
-    ("key205", "-448", False),
-    ("key620", "-89", False),
-    ("key135", "-203", False),
-    None,
-    ("key699", "948", False),
-    None,
-    ("key832", "503", False),
-    None,
-    None,
-    None,
-    ("key359", "126", False),
-    None,
-    None,
-    ("key479", "-629", False),
-    None,
-    None,
-    None,
-    ("key108", "784", False),
-    None,
-    ("key416", "223", False),
-    None,
-    ("key238", "-538", False),
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    ("key51", "808", False),
-    None,
-    ("key71", "-47", False),
-    None,
-    ("key91", "320", False),
-    None,
-    ("key48", "325", True),
-    None,
-    None,
-    ("key96", "494", False),
-    None,
-    None,
-    None,
-    None,
-    None]
-    for item in listed:
-        if item != None:
-            to_be_inserted = HashEntry(item[0], item[1])
-            to_be_inserted.is_tombstone = item[2]
-            m._buckets.append(to_be_inserted)
-        else:
-            m._buckets.append(None)
-    m._capacity = 223
-    print(m)
-    m.remove('key881')
-    print(m._buckets[45])
