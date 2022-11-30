@@ -152,7 +152,6 @@ class HashMap:
         else:
             return False
 
-
     def remove(self, key: str) -> None:
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
@@ -173,19 +172,22 @@ def find_mode(da: DynamicArray) -> (DynamicArray, int):
     """
     # if you'd like to use a hash map,
     # use this instance of your Separate Chaining HashMap
-    array_return = DynamicArray()
-    counter = 1
     map = HashMap()
     for x in range(da.length()):
-        size = map.get_size()
-        map.put(str(da[x]), da[x])
-        if map.get_size() == size:
-
-            array_return.append(da[x])
-            counter += 1
-    if array_return.length() == 0:
-        counter = 0
-    return (array_return, counter)
+        if map.contains_key(str(da[x])):
+            map.put(str(da[x]), map.get(str(da[x]))+1)
+        else:
+            map.put(str(da[x]), 1)
+    frequency = 0
+    result = map.get_keys_and_values()
+    for x in range(result.length()):
+        if result[x][1] > frequency:
+            array_return = DynamicArray()
+            array_return.append(result[x][0])
+            frequency = result[x][1]
+        elif result[x][1] == frequency:
+            array_return.append(result[x][0])
+    return (array_return, frequency)
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
