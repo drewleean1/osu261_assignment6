@@ -193,7 +193,7 @@ class HashMap:
             return
         else:
             j = 1
-            while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key:#self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
                 print(j)
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
@@ -691,4 +691,4 @@ if __name__ == "__main__":
     m._capacity = 223
     print(m)
     m.remove('key881')
-    #print(m)
+    print(m._buckets[45])
