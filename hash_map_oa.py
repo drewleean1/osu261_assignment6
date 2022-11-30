@@ -188,7 +188,7 @@ class HashMap:
             self._buckets[hash_value].is_tombstone = True
             self._size -= 1
             print('aqui')
-        elif self._buckets[hash_value] == None or self._buckets[hash_value].is_tombstone == True:
+        elif self._buckets[hash_value] == None: # or self._buckets[hash_value].is_tombstone == True:
             print('hello')
             return
         else:
@@ -690,5 +690,5 @@ if __name__ == "__main__":
             m._buckets.append(None)
     m._capacity = 223
     print(m)
-    m.remove('key811')
+    m.remove('key881')
     #print(m)
