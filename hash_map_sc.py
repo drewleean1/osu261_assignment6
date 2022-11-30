@@ -173,10 +173,19 @@ def find_mode(da: DynamicArray) -> (DynamicArray, int):
     """
     # if you'd like to use a hash map,
     # use this instance of your Separate Chaining HashMap
+    array_return = DynamicArray()
+    counter = 1
     map = HashMap()
     for x in range(da.length()):
-        map.put(x, da[x])
+        size = map.get_size()
+        map.put(str(da[x]), da[x])
+        if map.get_size() == size:
 
+            array_return.append(da[x])
+            counter += 1
+    if array_return.length() == 0:
+        counter = 0
+    return (array_return, counter)
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
@@ -349,7 +358,7 @@ if __name__ == "__main__":
     m.remove('key1')
     print(m.get('key1'))
     m.remove('key4')
-    '''
+    
     print("\nPDF - get_keys_and_values example 1")
     print("------------------------")
     m = HashMap(11, hash_function_2)
@@ -380,4 +389,3 @@ if __name__ == "__main__":
         da = DynamicArray(case)
         mode, frequency = find_mode(da)
         print(f"Input: {da}\nMode : {mode}, Frequency: {frequency}\n")
-    '''
