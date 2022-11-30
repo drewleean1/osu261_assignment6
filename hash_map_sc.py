@@ -89,17 +89,21 @@ class HashMap:
     # ------------------------------------------------------------------ #
 
     def put(self, key: str, value: object) -> None:
+        '''method that takes given key and value, computes a hash value with the given key, and adds it to the hash map
+        via linked list. If the given key is the same as a key already in the hash, replaces it. Also, resizes the map
+        if the load is too high '''
         if self.table_load() >= 1:
             self.resize_table(self.get_capacity()*2)
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
-        if self._buckets[hash_value].contains(key):
+        if self._buckets[hash_value].contains(key):                     #removes key if its a duplicate
             self._buckets[hash_value].remove(key)
             self._size -= 1
         self._buckets[hash_value].insert(key,value)
         self._size += 1
 
     def empty_buckets(self) -> int:
+        '''method to calculate how many empty buckets there are in the map'''
         counter = 0
         for x in range(self._buckets.length()):
             if self._buckets[x].length() == 0:
@@ -107,35 +111,39 @@ class HashMap:
         return counter
 
     def table_load(self) -> float:
+        '''method to calculate the table load of the map'''
         return self.get_size()/self.get_capacity()
 
     def clear(self) -> None:
-        capacity_to_keep = self._capacity
+        '''method to clear the map by creating a whole new DynamicArray'''
         self._buckets = DynamicArray()
-        for x in range(capacity_to_keep):
+        for x in range(self._capacity):
             self._buckets.append(LinkedList())
         self._size = 0
 
     def resize_table(self, new_capacity: int) -> None:
+        '''method to resize the table to the given new_capacity. Does nothing if the new_capacity < 1. If the given
+        new_capacity is not a prime number, we call ._next_prime'''
         if new_capacity < 1:
             return
         elif new_capacity >= 1:
-            if not self._is_prime(new_capacity):
+            if not self._is_prime(new_capacity):                        #calc new prime if necessary
                 new_capacity = self._next_prime(new_capacity)
-            old_array = self._buckets
-            self._buckets = DynamicArray()
+            old_array = self._buckets                                   #pointer to current array to transfer later
+            self._buckets = DynamicArray()                              #create our new DA
             for x in range(new_capacity):
                 self._buckets.append(LinkedList())
-            self._capacity = new_capacity
+            self._capacity = new_capacity                               #make sure capacity and size are correct
             self._size = 0
-            counter = 0
-            for x in range(old_array.length()):
+            #counter = 0
+            for x in range(old_array.length()):                         #for loop to put every value in old to new
                 key_and_value = old_array.pop()
                 for x in key_and_value:
                     self.put(x.key, x.value)
-                    counter += 1
+                    #counter += 1
 
     def get(self, key: str):
+        '''method to return the associated value with the given key. Return nothing if there is nothing associated'''
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
         to_return = self._buckets[hash_value].contains(key)
@@ -145,6 +153,7 @@ class HashMap:
             return None
 
     def contains_key(self, key: str) -> bool:
+        '''method returns a boolean if the given key is in the map'''
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
         if self._buckets[hash_value].contains(key) != None:
@@ -153,13 +162,15 @@ class HashMap:
             return False
 
     def remove(self, key: str) -> None:
+        '''method removes the value associated with the given key'''
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
-        outcome = self._buckets[hash_value].remove(key)
+        outcome = self._buckets[hash_value].remove(key)                 #subtract one from size if we do remove
         if outcome:
             self._size -= 1
 
     def get_keys_and_values(self) -> DynamicArray:
+        '''method returns a DA of tuples of all the keys and values in the hash'''
         array_return = DynamicArray()
         for x in range(self._buckets.length()):
             for y in self._buckets[x]:
@@ -167,26 +178,24 @@ class HashMap:
         return array_return
 
 def find_mode(da: DynamicArray) -> (DynamicArray, int):
-    """
-    TODO: Write this implementation
-    """
-    # if you'd like to use a hash map,
-    # use this instance of your Separate Chaining HashMap
+    '''method takes a given DA and returns a tuple of all the modes and then the frequency. Uses hashes to achieve
+    O(n). Uses the element in the given DA as the key and sets as the value how many of the element are in the hash
+    map.'''
     map = HashMap()
     for x in range(da.length()):
-        if map.contains_key(str(da[x])):
+        if map.contains_key(str(da[x])):                  #if element in hash, put it with a value of +1
             map.put(str(da[x]), map.get(str(da[x]))+1)
-        else:
+        else:                                             #if element not in hash, put it in with a value of 1 freq
             map.put(str(da[x]), 1)
     frequency = 0
-    result = map.get_keys_and_values()
-    for x in range(result.length()):
-        if result[x][1] > frequency:
+    hashed_map = map.get_keys_and_values()
+    for x in range(hashed_map.length()):                  #go through our hashed map and append the modes to new array
+        if hashed_map[x][1] > frequency:
             array_return = DynamicArray()
-            array_return.append(result[x][0])
-            frequency = result[x][1]
-        elif result[x][1] == frequency:
-            array_return.append(result[x][0])
+            array_return.append(hashed_map[x][0])
+            frequency = hashed_map[x][1]
+        elif hashed_map[x][1] == frequency:
+            array_return.append(hashed_map[x][0])
     return (array_return, frequency)
 
 

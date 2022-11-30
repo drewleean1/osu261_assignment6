@@ -86,34 +86,37 @@ class HashMap:
     # ------------------------------------------------------------------ #
 
     def put(self, key: str, value: object) -> None:
+        '''method takes a given key and value and puts it into our hash map. Resize if the table load is to high.'''
         if self.table_load() >= 0.5:
             self.resize_table(self.get_capacity()*2)
         to_be_put = HashEntry(key, value)
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
-        original_hash = hash_value
+        original_hash = hash_value                                  #keep track of original hash for quadratic probe
+        #conditions we can face when putting in a value:
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
-            self._buckets[hash_value] = to_be_put
-        elif self._buckets[hash_value] == None: #or self._buckets[hash_value].is_tombstone == True:
+            self._buckets[hash_value] = to_be_put                   #don't need to iterate size if same key
+        elif self._buckets[hash_value] == None:
             self._buckets[hash_value] = to_be_put
             self._size += 1
         else:
-            j = 1
-            #while self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
-            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key: #and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            j = 1                                                   #quadratic probing with while loop
+            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
                 if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
-                    self._size -= 1
+                    self._size -= 1                                 #same key collision, so adjust size
             self._buckets[hash_value] = to_be_put
             self._size += 1
 
     def table_load(self) -> float:
+        '''method returns table load'''
         return self.get_size()/self.get_capacity()
 
 
     def empty_buckets(self) -> int:
+        '''method returns number of empty buckets'''
         counter = 0
         for x in range(self._buckets.length()):
             if self._buckets[x] == None or self._buckets[x].is_tombstone == True:
@@ -121,6 +124,8 @@ class HashMap:
         return counter
 
     def resize_table(self, new_capacity: int) -> None:
+        '''method resizes table with given new_capacity. Similar logic to the one in hash_map_sc, but with different
+        conditions to not resize. Also have to account for tombstones'''
         if new_capacity < self.get_size():
             return
         else:
@@ -145,11 +150,11 @@ class HashMap:
         original_hash = hash_value
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
             return self._buckets[hash_value].value
-        elif self._buckets[hash_value] == None: # or self._buckets[hash_value].is_tombstone == True:
+        elif self._buckets[hash_value] == None:
             return None
         else:
             j = 1
-            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key: #and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
@@ -159,6 +164,7 @@ class HashMap:
                 return None
 
     def contains_key(self, key: str) -> bool:
+        '''method returns a bool if given key is in the hash map. uses same logic as our put method'''
         if self.get_size() == 0:
             return False
         hash_value = self._hash_function(key)
@@ -166,11 +172,11 @@ class HashMap:
         original_hash = hash_value
         if self._buckets[hash_value] != None and self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key == key:
             return True
-        elif self._buckets[hash_value] == None: #or self._buckets[hash_value].is_tombstone == True:
+        elif self._buckets[hash_value] == None:
             return False
         else:
             j = 1
-            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key: # self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
@@ -180,6 +186,8 @@ class HashMap:
                 return False
 
     def remove(self, key: str) -> None:
+        '''method removes the given key from the hash value. Sets the tombstone to True. Uses same logic for quadratic
+        probing as our put method.'''
         hash_value = self._hash_function(key)
         hash_value = hash_value % self.get_capacity()
         original_hash = hash_value
@@ -190,7 +198,7 @@ class HashMap:
             return
         else:
             j = 1
-            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key:#self._buckets[hash_value].is_tombstone == False and self._buckets[hash_value].key != key:
+            while self._buckets[hash_value] != None and self._buckets[hash_value].key != key:
                 hash_value = original_hash
                 hash_value = (hash_value + j ** 2) % self.get_capacity()
                 j += 1
@@ -201,12 +209,14 @@ class HashMap:
                 return
 
     def clear(self) -> None:
+        '''method clears our hash map'''
         self._buckets = DynamicArray()
         for x in range(self._capacity):
             self._buckets.append(None)
         self._size = 0
 
     def get_keys_and_values(self) -> DynamicArray:
+        '''method returns a DA of tuples of all the keys and values in the hash. Takes into account tombstones'''
         array_returned = DynamicArray()
         for x in range(self._buckets.length()):
             if self._buckets[x] != None and self._buckets[x].is_tombstone == False:
@@ -219,6 +229,7 @@ class HashMap:
         return self
 
     def __next__(self):
+        '''next method for iteration. Makes sure to account for tombstones'''
         try:
             condition = True
             while condition:
